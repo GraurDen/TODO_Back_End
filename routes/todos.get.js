@@ -12,6 +12,9 @@ todoGetRouter.get('/', (req, res) => {
 
         return JSON.parse(data);
     });
+    // if(req.query === 'asc'){
+    //     db.filter((item) => )
+    // }
     console.log(req.query);
     res.send(db);
 });
