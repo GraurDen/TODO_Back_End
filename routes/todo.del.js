@@ -1,26 +1,34 @@
 import Router from 'express';
-import path from 'path';
 import fs from 'fs';
+import config from '../config.js';
+import { param, validationResult } from 'express-validator';
 
-const __dirname = path.resolve();
-const DB_URL = path.join(__dirname, 'db.json');
+const { dataBase } = config;
 const todoDelRouter = new Router();
 
-todoDelRouter.delete('/:id', (req, res) => {
-    fs.readFile(DB_URL, 'utf-8', (err, data) => {
-        if (err) throw err;
+todoDelRouter.delete(
+    '/:id',
+    param('id').notEmpty().withMessage('Parametr "id" must be not empty'),
 
-        // get data from db
-        const db = JSON.parse(data);
+    (req, res) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+            // get db
+            const db = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
 
-        const newDB = [...db.filter((task) => req.params.id !== task.id)];
+            const newDB = [...db.filter((task) => req.params.id !== task.id)];
 
-        // write file
-        fs.writeFile(DB_URL, JSON.stringify(newDB), (err) => {
-            if (err) throw err;
-        });
-    });
-    res.json(req.params.id);
-});
+            // write db
+            fs.writeFileSync(dataBase, JSON.stringify(newDB));
+
+            res.send(`User with ID:${req.params.id} deleted`);
+        } catch (error) {
+            res.send({ message: error.message });
+        }
+    }
+);
 
 export default todoDelRouter;

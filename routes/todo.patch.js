@@ -1,34 +1,43 @@
 import Router from 'express';
-import path from 'path';
 import fs from 'fs';
+import config from '../config.js';
+import { param, body, validationResult } from 'express-validator';
 
-const __dirname = path.resolve();
-const DB_URL = path.join(__dirname, 'db.json');
+const { dataBase } = config;
 const todoPatchRouter = new Router();
 
-todoPatchRouter.patch('/:id', (req, res) => {
-    fs.readFile(DB_URL, 'utf-8', (err, data) => {
-        if (err) throw err;
+todoPatchRouter.patch(
+    '/:id',
+    param('id').notEmpty().withMessage('Parametr "id" must be not empty'),
+    body('name').optional(),
 
-        // get data from db
-        const db = JSON.parse(data);
+    (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-        const newDB = [...db];
+        try {
+            // get data from db
+            const db = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
 
-        newDB.map((task) => {
-            if (req.params.id === task.id && req.body.name) {
-                task.name = req.body.name;
-            } else if (req.params.id === task.id) {
-                task.done = !task.done;
-            }
-        });
+            const newDB = [...db];
 
-        // write file
-        fs.writeFile(DB_URL, JSON.stringify(newDB), (err) => {
-            if (err) throw err;
-        });
-    });
-    res.json(req.params.id);
-});
+            newDB.map((task) => {
+                if (req.params.id === task.id && req.body.name) {
+                    task.name = req.body.name;
+                } else if (req.params.id === task.id) {
+                    task.done = !task.done;
+                }
+            });
+
+            // write file
+            fs.writeFileSync(dataBase, JSON.stringify(newDB));
+            res.json(req.params.id);
+        } catch (error) {
+            res.send({ message: error.message });
+        }
+    }
+);
 
 export default todoPatchRouter;

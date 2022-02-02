@@ -35,23 +35,23 @@ const DB_URL = path.join(__dirname, 'db.json');
 // }
 
 // add new todo
-export function addTodo(req, res) {
-    fs.readFile(DB_URL, 'utf-8', (err, data) => {
-        // get data from db
-        const tempDB = JSON.parse(data);
+// export function addTodo(req, res) {
+//     fs.readFile(DB_URL, 'utf-8', (err, data) => {
+//         // get data from db
+//         const tempDB = JSON.parse(data);
 
-        // add task
-        const task = {
-            name: req.body.name ?? 'empty',
-            id: v4(),
-            done: req.body.done ?? false,
-            createdAt: +new Date(),
-        };
+//         // add task
+//         const task = {
+//             name: req.body.name ?? 'empty',
+//             id: v4(),
+//             done: req.body.done ?? false,
+//             createdAt: +new Date(),
+//         };
 
-        tempDB.push(task);
+//         tempDB.push(task);
 
-        // write file
-        fs.writeFileSync(DB_URL, JSON.stringify(tempDB));
-    });
-    res.json(req.body);
-}
+//         // write file
+//         fs.writeFileSync(DB_URL, JSON.stringify(tempDB));
+//     });
+//     res.json(req.body);
+// }
