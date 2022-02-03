@@ -14,14 +14,14 @@ todoPostRouter.post(
         .withMessage('Task name must be at least 4 chars long')
         .matches(/^[A-Za-z0-9\_]+$/)
         .withMessage('Task name must be alphanumeric only'),
+    body('done').exists(),
 
     (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
-
             // get data from db
             const tempDB = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
 

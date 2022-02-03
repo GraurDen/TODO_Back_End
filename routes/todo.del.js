@@ -11,11 +11,11 @@ todoDelRouter.delete(
     param('id').notEmpty().withMessage('Parametr "id" must be not empty'),
 
     (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
             // get db
             const db = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
 
