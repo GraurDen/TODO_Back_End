@@ -3,6 +3,7 @@ import fs from 'fs';
 import { v4 } from 'uuid';
 import config from '../config.js';
 import { body, validationResult } from 'express-validator';
+import pool from '../db.js';
 const { dataBase } = config;
 
 const todoPostRouter = new Router();
@@ -16,11 +17,12 @@ todoPostRouter.post(
         .withMessage('Task name must be alphanumeric only'),
     body('done').exists(),
 
-    (req, res) => {
+    async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
+
         try {
             // get data from db
             const tempDB = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
@@ -35,9 +37,14 @@ todoPostRouter.post(
 
             tempDB.push(task);
 
+            const todo = await pool.dataBase2.query(
+                'INSERT INTO todo_db (id, name, done, createdAt) values ($1, $2, $3, $4) RETURNING*',
+                [v4(), req.body.name, req.body.done, +new Date()]
+            );
             // write file
             fs.writeFileSync(dataBase, JSON.stringify(tempDB));
-            res.json(req.body);
+            //
+            res.json(todo);
         } catch (error) {
             res.send({ message: error.message });
         }
