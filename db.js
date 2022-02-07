@@ -1,5 +1,5 @@
-import * as pg from 'pg';
-const { Pool } = pg.default;
+const { Pool } = require('pg');
+//const { Pool } = pg.default;
 
 const pool = new Pool({
     user: 'postgres',
@@ -9,4 +9,4 @@ const pool = new Pool({
     database2: 'todo_bd',
 });
 
-export default pool;
+module.exports = pool;

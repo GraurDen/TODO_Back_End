@@ -1,9 +1,9 @@
-import Router from 'express';
-import fs from 'fs';
-import { v4 } from 'uuid';
-import config from '../config.js';
-import { body, validationResult } from 'express-validator';
-import pool from '../db.js';
+const Router = require('express');
+const fs = require('fs');
+const { v4 } = require('uuid');
+const config = require('../config');
+const { body, validationResult } = require('express-validator');
+const pool = require('../db');
 const { dataBase } = config;
 
 const todoPostRouter = new Router();
@@ -37,18 +37,18 @@ todoPostRouter.post(
 
             tempDB.push(task);
 
-            const todo = await pool.dataBase2.query(
-                'INSERT INTO todo_db (id, name, done, createdAt) values ($1, $2, $3, $4) RETURNING*',
-                [v4(), req.body.name, req.body.done, +new Date()]
-            );
+            // const todo = await pool.dataBase2.query(
+            //     'INSERT INTO todo_db (id, name, done, createdAt) values ($1, $2, $3, $4) RETURNING*',
+            //     [v4(), req.body.name, req.body.done, +new Date()]
+            // );
             // write file
             fs.writeFileSync(dataBase, JSON.stringify(tempDB));
             //
-            res.json(todo);
+            res.json({ ...task });
         } catch (error) {
             res.send({ message: error.message });
         }
     }
 );
 
-export default todoPostRouter;
+module.exports = todoPostRouter;

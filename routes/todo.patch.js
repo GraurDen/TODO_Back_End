@@ -1,7 +1,7 @@
-import Router from 'express';
-import fs from 'fs';
-import config from '../config.js';
-import { param, body, validationResult } from 'express-validator';
+const Router = require('express');
+const fs = require('fs');
+const config = require('../config');
+const { param, body, validationResult } = require('express-validator');
 
 const { dataBase } = config;
 const todoPatchRouter = new Router();
@@ -40,4 +40,4 @@ todoPatchRouter.patch(
     }
 );
 
-export default todoPatchRouter;
+module.exports = todoPatchRouter;

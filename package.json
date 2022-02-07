@@ -1,28 +1,27 @@
 {
-  "name": "todo_back_end",
-  "version": "1.0.0",
-  "description": "internship",
-  "main": "app.js",
-  "type": "module",
-  "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^15.0.0",
-    "express": "^4.17.2",
-    "express-validator": "^6.14.0",
-    "path": "^0.12.7",
-    "pg": "^8.7.1",
-    "recursive-readdir": "^2.2.2",
-    "recursive-readdir-sync": "^1.0.6",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
-  }
+    "name": "todo_back_end",
+    "version": "1.0.0",
+    "description": "internship",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^15.0.0",
+        "express": "^4.17.2",
+        "express-validator": "^6.14.0",
+        "path": "^0.12.7",
+        "pg": "^8.7.1",
+        "recursive-readdir": "^2.2.2",
+        "recursive-readdir-sync": "^1.0.6",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    }
 }

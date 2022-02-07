@@ -1,7 +1,7 @@
-import Router from 'express';
-import fs from 'fs';
-import config from '../config.js';
-import { query, validationResult } from 'express-validator';
+const Router = require('express');
+const fs = require('fs');
+const config = require('../config');
+const { query, validationResult } = require('express-validator');
 
 const { dataBase } = config;
 const todoGetRouter = new Router();
@@ -56,4 +56,4 @@ todoGetRouter.get(
     }
 );
 
-export default todoGetRouter;
+module.exports = todoGetRouter;

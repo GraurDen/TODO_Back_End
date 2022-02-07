@@ -1,7 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import router from './routes/index.js';
-import config from './config.js';
+const express = require('express');
+const cors = require('cors');
+const router = require('./routes/index');
+const config = require('./config');
 
 const app = express();
 
