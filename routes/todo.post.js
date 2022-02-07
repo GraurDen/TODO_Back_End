@@ -4,7 +4,8 @@ const { v4 } = require('uuid');
 const config = require('../config');
 const { body, validationResult } = require('express-validator');
 const pool = require('../db');
-const { dataBase } = config;
+const todo = require('../models/todo.model');
+const { Sequelize } = require('sequelize');
 
 const todoPostRouter = new Router();
 
@@ -24,6 +25,15 @@ todoPostRouter.post(
         }
 
         try {
+            // await todo.create({
+            //     id: v4(),
+            //     name: req.body.name,
+            //     done: req.body.done ?? false,
+            //     createdAt: new Date(),
+            // });
+
+            await todo.findAll();
+
             // get data from db
             //const tempDB = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
 
@@ -37,15 +47,10 @@ todoPostRouter.post(
 
             //tempDB.push(task);
 
-            const todo = await pool.query(
-                'INSERT INTO todo (id, name, done, createdAt) VALUES ($1, $2, $3, $4) RETURNING*',
-                [v4(), req.body.name, req.body.done, new Date()]
-            );
-
             // write file
             //fs.writeFileSync(dataBase, JSON.stringify(tempDB));
             //
-            res.json(todo.rows[0]);
+            res.send('hello');
         } catch (error) {
             res.send({ message: error.message });
         }

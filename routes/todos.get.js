@@ -25,29 +25,29 @@ todoGetRouter.get(
             return res.status(400).json({ errors: errors.array() });
         }
         try {
-            let todos = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
+            // let todos = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
 
-            if (req.query.sortBy === 'done') {
-                todos = todos.filter((item) => item.done === true);
-            }
-            if (req.query.sortBy === 'undone') {
-                todos = todos.filter((item) => item.done === false);
-            }
+            // if (req.query.sortBy === 'done') {
+            //     todos = todos.filter((item) => item.done === true);
+            // }
+            // if (req.query.sortBy === 'undone') {
+            //     todos = todos.filter((item) => item.done === false);
+            // }
 
-            if (req.query.orderBy === 'asc') {
-                todos = todos.sort((a, b) => a.createdAt - b.createdAt);
-            }
-            if (req.query.orderBy === 'desc') {
-                todos = todos.sort((a, b) => b.createdAt - a.createdAt);
-            }
+            // if (req.query.orderBy === 'asc') {
+            //     todos = todos.sort((a, b) => a.createdAt - b.createdAt);
+            // }
+            // if (req.query.orderBy === 'desc') {
+            //     todos = todos.sort((a, b) => b.createdAt - a.createdAt);
+            // }
 
-            const pageSize = req.query.pp ?? 5;
-            const page = req.query.page ?? 1;
+            // const pageSize = req.query.pp ?? 5;
+            // const page = req.query.page ?? 1;
 
-            const lastIndex = page * pageSize;
-            const firstIndex = lastIndex - pageSize;
+            // const lastIndex = page * pageSize;
+            // const firstIndex = lastIndex - pageSize;
 
-            let currentTodos = todos.slice(firstIndex, lastIndex);
+            // let currentTodos = todos.slice(firstIndex, lastIndex);
 
             res.send({ count: todos.length, tasks: currentTodos });
         } catch (error) {
