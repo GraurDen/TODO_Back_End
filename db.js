@@ -6,7 +6,7 @@ const pool = new Pool({
     password: 'admin',
     host: 'localhost',
     port: '5432',
-    database2: 'todo_bd',
+    database: 'todo_db',
 });
 
 module.exports = pool;

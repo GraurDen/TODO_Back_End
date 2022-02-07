@@ -25,26 +25,27 @@ todoPostRouter.post(
 
         try {
             // get data from db
-            const tempDB = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
+            //const tempDB = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
 
             // add task
-            const task = {
-                name: req.body.name,
-                id: v4(),
-                done: req.body.done ?? false,
-                createdAt: +new Date(),
-            };
+            // const task = {
+            //     name: req.body.name,
+            //     id: v4(),
+            //     done: req.body.done ?? false,
+            //     createdAt: +new Date(),
+            // };
 
-            tempDB.push(task);
+            //tempDB.push(task);
 
-            // const todo = await pool.dataBase2.query(
-            //     'INSERT INTO todo_db (id, name, done, createdAt) values ($1, $2, $3, $4) RETURNING*',
-            //     [v4(), req.body.name, req.body.done, +new Date()]
-            // );
+            const todo = await pool.query(
+                'INSERT INTO todo (id, name, done, createdAt) VALUES ($1, $2, $3, $4) RETURNING*',
+                [v4(), req.body.name, req.body.done, new Date()]
+            );
+
             // write file
-            fs.writeFileSync(dataBase, JSON.stringify(tempDB));
+            //fs.writeFileSync(dataBase, JSON.stringify(tempDB));
             //
-            res.json({ ...task });
+            res.json(todo.rows[0]);
         } catch (error) {
             res.send({ message: error.message });
         }
