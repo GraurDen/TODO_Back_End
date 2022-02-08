@@ -1,6 +1,7 @@
 const Router = require('express');
-const fs = require('fs');
 const config = require('../config');
+const { todos } = require('../models/index');
+const { Op } = require('sequelize');
 const { param, body, validationResult } = require('express-validator');
 
 const { dataBase } = config;
@@ -11,29 +12,40 @@ todoPatchRouter.patch(
     param('id').notEmpty().withMessage('Parametr "id" must be not empty'),
     body('name').optional(),
 
-    (req, res) => {
+    async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
 
         try {
-            // get data from db
-            const db = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
+            const { done, name } = req.body;
 
-            const newDB = [...db];
-
-            newDB.map((task) => {
-                if (req.params.id === task.id && req.body.name) {
-                    task.name = req.body.name;
-                } else if (req.params.id === task.id) {
-                    task.done = !task.done;
-                }
+            const uniqueNameValidation = await todos.findOne({
+                where: {
+                    name: req.body.name,
+                },
+                [Op.not]: req.params.id,
             });
 
-            // write file
-            fs.writeFileSync(dataBase, JSON.stringify(newDB));
-            res.json(req.params.id);
+            if (uniqueNameValidation) {
+                res.send(`Задача с именем ${req.body.name} существует`);
+                return;
+            }
+
+            const updatedTodo = await todos.update(
+                {
+                    name,
+                    done,
+                },
+                {
+                    where: {
+                        id: req.params.id,
+                    },
+                }
+            );
+
+            res.send(updatedTodo);
         } catch (error) {
             res.send({ message: error.message });
         }

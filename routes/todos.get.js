@@ -1,9 +1,6 @@
 const Router = require('express');
-const fs = require('fs');
-const config = require('../config');
+const { todos } = require('../models/index');
 const { query, validationResult } = require('express-validator');
-
-const { dataBase } = config;
 const todoGetRouter = new Router();
 
 todoGetRouter.get(
@@ -19,37 +16,24 @@ todoGetRouter.get(
         .isInt()
         .custom((value) => value >= 1)
         .withMessage(' query "page" must be equal or greate then 0 '),
-    (req, res) => {
+    async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
         try {
-            // let todos = JSON.parse(fs.readFileSync(dataBase, 'utf-8'));
+            const sortBy = req.query.sortBy === 'done' ? true : false;
+            const pp = req.query.pp || 5;
+            const orderBy = req.query.orderBy || 'desc';
+            const page = req.query.page || 1;
 
-            // if (req.query.sortBy === 'done') {
-            //     todos = todos.filter((item) => item.done === true);
-            // }
-            // if (req.query.sortBy === 'undone') {
-            //     todos = todos.filter((item) => item.done === false);
-            // }
-
-            // if (req.query.orderBy === 'asc') {
-            //     todos = todos.sort((a, b) => a.createdAt - b.createdAt);
-            // }
-            // if (req.query.orderBy === 'desc') {
-            //     todos = todos.sort((a, b) => b.createdAt - a.createdAt);
-            // }
-
-            // const pageSize = req.query.pp ?? 5;
-            // const page = req.query.page ?? 1;
-
-            // const lastIndex = page * pageSize;
-            // const firstIndex = lastIndex - pageSize;
-
-            // let currentTodos = todos.slice(firstIndex, lastIndex);
-
-            res.send({ count: todos.length, tasks: currentTodos });
+            const getAll = await todos.findAndCountAll({
+                where: { done: sortBy },
+                order: [['createdAt', orderBy]],
+                offset: pp * (page - 1),
+                limit: pp,
+            });
+            res.send(getAll);
         } catch (error) {
             res.send({ message: error });
         }
