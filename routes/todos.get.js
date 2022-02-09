@@ -2,6 +2,7 @@ const Router = require('express');
 const { todos } = require('../models/index');
 const { query } = require('express-validator');
 const handleErrors = require('../helpers');
+const { Op } = require('sequelize');
 const todoGetRouter = new Router();
 
 todoGetRouter.get(
@@ -20,17 +21,26 @@ todoGetRouter.get(
     handleErrors,
     async (req, res) => {
         try {
-            const sortBy = req.query.sortBy === 'done' ? true : false;
+            //const sortBy = req.query.sortBy
+
+            let sortBy = req.query.sortBy;
+            if (sortBy === 'done') {
+                sortBy = true;
+            }
+            if (sortBy === 'undone') {
+                sortBy = false;
+            }
             const pp = req.query.pp || 5;
             const orderBy = req.query.orderBy || 'desc';
             const page = req.query.page || 1;
 
             const getAll = await todos.findAndCountAll({
-                where: { done: sortBy },
+                where: !sortBy ? {} : { done: sortBy },
                 order: [['createdAt', orderBy]],
                 offset: pp * (page - 1),
                 limit: pp,
             });
+
             res.send(getAll);
         } catch (error) {
             res.send({ message: error });

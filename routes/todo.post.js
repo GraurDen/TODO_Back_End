@@ -19,8 +19,9 @@ todoPostRouter.post(
             });
 
             if (nameExisting) {
-                res.send(`Задача с именем ${name} существует`);
-                return;
+                return res.status(400).send({
+                    message: `Задача с именем ${name} существует`,
+                });
             }
 
             const todoCreate = await todos.create({ name, done });
