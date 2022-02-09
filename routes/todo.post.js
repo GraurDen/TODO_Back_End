@@ -5,7 +5,7 @@ const handleErrors = require('../helpers');
 const todoPostRouter = new Router();
 
 todoPostRouter.post(
-    '/',
+    '/todo',
     body('name')
         .isLength({ min: 2 })
         .withMessage('Task name must be at least 4 chars long'),
@@ -14,6 +14,15 @@ todoPostRouter.post(
     async (req, res) => {
         const { name, done } = req.body;
         try {
+            const nameExisting = await todos.findOne({
+                where: { name },
+            });
+
+            if (nameExisting) {
+                res.send(`Задача с именем ${name} существует`);
+                return;
+            }
+
             const todoCreate = await todos.create({ name, done });
 
             res.send(todoCreate);

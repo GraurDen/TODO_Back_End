@@ -5,7 +5,7 @@ const handleErrors = require('../helpers');
 const todoDelRouter = new Router();
 
 todoDelRouter.delete(
-    '/:id',
+    '/todo/:id',
     param('id').notEmpty().withMessage('Parametr "id" must be not empty'),
     handleErrors,
     async (req, res) => {

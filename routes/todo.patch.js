@@ -6,7 +6,7 @@ const handleErrors = require('../helpers');
 const todoPatchRouter = new Router();
 
 todoPatchRouter.patch(
-    '/:id',
+    '/todo/:id',
     param('id').notEmpty().withMessage('Parametr "id" must be not empty'),
     body('name').optional(),
     handleErrors,

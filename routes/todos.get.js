@@ -5,7 +5,7 @@ const handleErrors = require('../helpers');
 const todoGetRouter = new Router();
 
 todoGetRouter.get(
-    '/',
+    '/todos',
     query('orderBy')
         .isIn(['asc', 'desc'])
         .withMessage(' Query "orderBy" must be "ascending" or "descending" '),
