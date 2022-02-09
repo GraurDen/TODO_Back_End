@@ -1,6 +1,7 @@
 const Router = require('express');
 const { todos } = require('../models/index');
-const { query, validationResult } = require('express-validator');
+const { query } = require('express-validator');
+const handleErrors = require('../helpers');
 const todoGetRouter = new Router();
 
 todoGetRouter.get(
@@ -16,11 +17,8 @@ todoGetRouter.get(
         .isInt()
         .custom((value) => value >= 1)
         .withMessage(' query "page" must be equal or greate then 0 '),
+    handleErrors,
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
         try {
             const sortBy = req.query.sortBy === 'done' ? true : false;
             const pp = req.query.pp || 5;

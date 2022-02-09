@@ -1,17 +1,14 @@
 const Router = require('express');
-const { param, validationResult } = require('express-validator');
+const { param } = require('express-validator');
 const { todos } = require('../models/index');
+const handleErrors = require('../helpers');
 const todoDelRouter = new Router();
 
 todoDelRouter.delete(
     '/:id',
     param('id').notEmpty().withMessage('Parametr "id" must be not empty'),
-
+    handleErrors,
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
         try {
             await todos.destroy({
                 where: {

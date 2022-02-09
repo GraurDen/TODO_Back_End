@@ -1,51 +1,41 @@
 const Router = require('express');
-const config = require('../config');
 const { todos } = require('../models/index');
 const { Op } = require('sequelize');
-const { param, body, validationResult } = require('express-validator');
-
-const { dataBase } = config;
+const { param, body } = require('express-validator');
+const handleErrors = require('../helpers');
 const todoPatchRouter = new Router();
 
 todoPatchRouter.patch(
     '/:id',
     param('id').notEmpty().withMessage('Parametr "id" must be not empty'),
     body('name').optional(),
-
+    handleErrors,
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
         try {
             const { done, name } = req.body;
 
-            const uniqueNameValidation = await todos.findOne({
-                where: {
-                    name: req.body.name,
-                },
-                [Op.not]: req.params.id,
-            });
+            // Check req.body has 'name'
+            if (name) {
+                const nameExisting = await todos.findOne({
+                    where: { name },
+                    [Op.not]: [req.params.id],
+                });
 
-            if (uniqueNameValidation) {
-                res.send(`Задача с именем ${req.body.name} существует`);
-                return;
+                if (nameExisting) {
+                    res.send(`Задача с именем ${name} существует`);
+                    return;
+                }
             }
 
-            const updatedTodo = await todos.update(
+            await todos.update(
                 {
                     name,
                     done,
                 },
-                {
-                    where: {
-                        id: req.params.id,
-                    },
-                }
+                { where: { id: req.params.id } }
             );
 
-            res.send(updatedTodo);
+            res.send('Task updated');
         } catch (error) {
             res.send({ message: error.message });
         }
