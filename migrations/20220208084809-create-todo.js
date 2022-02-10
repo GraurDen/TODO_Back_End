@@ -2,6 +2,13 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('todos', {
+            user_id: {
+                type: Sequelize.UUID,
+                references: {
+                    model: 'user',
+                    key: 'id',
+                },
+            },
             id: {
                 allowNull: false,
                 primaryKey: true,

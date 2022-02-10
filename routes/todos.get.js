@@ -2,7 +2,6 @@ const Router = require('express');
 const { todos } = require('../models/index');
 const { query } = require('express-validator');
 const handleErrors = require('../helpers');
-const { Op } = require('sequelize');
 const todoGetRouter = new Router();
 
 todoGetRouter.get(
@@ -21,8 +20,6 @@ todoGetRouter.get(
     handleErrors,
     async (req, res) => {
         try {
-            //const sortBy = req.query.sortBy
-
             let sortBy = req.query.sortBy;
             if (sortBy === 'done') {
                 sortBy = true;
