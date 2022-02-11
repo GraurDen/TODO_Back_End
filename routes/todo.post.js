@@ -13,6 +13,7 @@ todoPostRouter.post(
     handleErrors,
     async (req, res) => {
         const { name, done } = req.body;
+        console.log('user >>>', todos);
         try {
             const nameExisting = await todos.findOne({
                 where: { name },
