@@ -1,7 +1,7 @@
 const Router = require('express');
 const { param } = require('express-validator');
 const { todos } = require('../models/index');
-const handleErrors = require('../helpers');
+const { handleErrors } = require('../helpers');
 const todoDelRouter = new Router();
 
 todoDelRouter.delete(

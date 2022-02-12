@@ -1,7 +1,7 @@
 const Router = require('express');
 const { body } = require('express-validator');
 const { todos } = require('../models/index');
-const handleErrors = require('../helpers');
+const { handleErrors } = require('../helpers');
 const todoPostRouter = new Router();
 
 todoPostRouter.post(

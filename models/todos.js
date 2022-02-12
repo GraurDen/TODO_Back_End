@@ -2,10 +2,10 @@
 const { Model, Sequelize } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class Todos extends Model {
+    class todos extends Model {
         static associate(models) {}
     }
-    Todos.init(
+    todos.init(
         {
             user_id: DataTypes.UUID,
             id: {
@@ -29,5 +29,5 @@ module.exports = (sequelize, DataTypes) => {
             updatedAt: false,
         }
     );
-    return Todos;
+    return todos;
 };

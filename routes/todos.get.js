@@ -1,7 +1,7 @@
 const Router = require('express');
 const { todos } = require('../models/index');
 const { query } = require('express-validator');
-const handleErrors = require('../helpers');
+const { handleErrors } = require('../helpers');
 const todoGetRouter = new Router();
 
 todoGetRouter.get(
@@ -20,19 +20,21 @@ todoGetRouter.get(
     handleErrors,
     async (req, res) => {
         try {
-            let sortBy = req.query.sortBy;
-            if (sortBy === 'done') {
+            let sortBy;
+            if (req.query.sortBy === 'done') {
                 sortBy = true;
             }
-            if (sortBy === 'undone') {
+            if (req.query.sortBy === 'undone') {
                 sortBy = false;
             }
+
+            console.log('req.query.sortBy >>', sortBy);
             const pp = req.query.pp || 5;
             const orderBy = req.query.orderBy || 'desc';
             const page = req.query.page || 1;
 
             const getAll = await todos.findAndCountAll({
-                where: !sortBy ? {} : { done: sortBy },
+                where: sortBy === undefined ? {} : { done: sortBy },
                 order: [['createdAt', orderBy]],
                 offset: pp * (page - 1),
                 limit: pp,

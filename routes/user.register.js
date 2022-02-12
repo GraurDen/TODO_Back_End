@@ -1,7 +1,7 @@
 const Router = require('express');
 const { body } = require('express-validator');
 const { users } = require('../models/index');
-const handleErrors = require('../helpers');
+const { handleErrors, generateAccessToken } = require('../helpers');
 const userRgisterRouter = new Router();
 const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(5);

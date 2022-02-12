@@ -2,7 +2,7 @@ const Router = require('express');
 const { todos } = require('../models/index');
 const { Op } = require('sequelize');
 const { param, body } = require('express-validator');
-const handleErrors = require('../helpers');
+const { handleErrors } = require('../helpers');
 const todoPatchRouter = new Router();
 
 todoPatchRouter.patch(

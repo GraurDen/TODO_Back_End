@@ -1,14 +1,10 @@
 const Router = require('express');
 const { param } = require('express-validator');
 const { users } = require('../models/index');
-const handleErrors = require('../helpers');
+const { handleErrors, generateAccessToken } = require('../helpers');
 const userAuthRouter = new Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-const generateAccessToken = (id) => {
-    return jwt.sign({ id }, process.env.SECRET, { expiresIn: '24h' });
-};
 
 userAuthRouter.post(
     '/auth',
@@ -35,7 +31,7 @@ userAuthRouter.post(
             }
 
             const token = generateAccessToken(user.id);
-            
+
             res.json(token);
         } catch (error) {
             console.log(error);

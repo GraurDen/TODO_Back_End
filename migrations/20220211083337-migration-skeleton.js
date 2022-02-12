@@ -26,7 +26,7 @@ module.exports = {
     async down(queryInterface, Sequelize) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
-            await queryInterface.removeColumn('todos', 'uuid', { transaction });
+            //await queryInterface.removeColumn('todos', 'uuid', { transaction });
             await transaction.commit();
         } catch (err) {
             await transaction.rollback();
