@@ -17,15 +17,16 @@ userRgisterRouter.post(
         .isLength({ min: 4 })
         .withMessage('Name must be at least 4 chars long'),
     handleErrors,
+
     async (req, res) => {
         const { name, password } = req.body;
 
         try {
-            const userExists = await users.findOne({
+            const user = await users.findOne({
                 where: { name },
             });
 
-            if (userExists) {
+            if (user) {
                 return res.status(400).send({
                     message: `User with name: ${name} already exists`,
                 });
@@ -33,12 +34,16 @@ userRgisterRouter.post(
             // create hash password
             const hashPassword = bcrypt.hashSync(password, salt);
 
+            // create user in database
             const userCreate = await users.create({
                 name,
                 password: hashPassword,
             });
 
-            res.send({ message: 'User is registered' });
+            // create access token
+            const token = generateAccessToken(userCreate.id);
+
+            res.status(200).send({ token: token });
         } catch (error) {
             console.log(error);
             res.send({ message: 'Registration error' });

@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     todos.init(
         {
             user_id: DataTypes.UUID,
+
             id: {
                 type: DataTypes.UUID,
                 defaultValue: Sequelize.UUIDV4,

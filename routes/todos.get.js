@@ -3,6 +3,7 @@ const { todos } = require('../models/index');
 const { query } = require('express-validator');
 const { handleErrors } = require('../helpers');
 const todoGetRouter = new Router();
+const authMiddleWare = require('../authMiddleWare');
 
 todoGetRouter.get(
     '/todos',
@@ -18,6 +19,7 @@ todoGetRouter.get(
         .custom((value) => value >= 1)
         .withMessage(' query "page" must be equal or greate then 0 '),
     handleErrors,
+    authMiddleWare,
     async (req, res) => {
         try {
             let sortBy;
@@ -28,7 +30,6 @@ todoGetRouter.get(
                 sortBy = false;
             }
 
-            console.log('req.query.sortBy >>', sortBy);
             const pp = req.query.pp || 5;
             const orderBy = req.query.orderBy || 'desc';
             const page = req.query.page || 1;
