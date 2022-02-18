@@ -5,6 +5,29 @@ const cors = require('cors');
 const port = process.env.PORT;
 const app = express();
 const sequelize = require('./database');
+const i18next = require('i18next');
+const Backend = require('i18next-fs-backend');
+const i18nextMiddleware = require('i18next-http-middleware');
+
+i18next
+    .use(Backend)
+    .use(i18nextMiddleware.LanguageDetector)
+    .init({
+        //Path to language resource files
+        backend: {
+            loadPath: __dirname + '/resources/locales/{{lng}}/{{ns}}.json',
+        },
+        // where to look language
+        detection: {
+            // detect lang, check query string first
+            order: ['querystring', 'cookie'],
+            caches: ['cookie'],
+        },
+        fallbackLng: 'en', // set 'en' if no active parameters found anywhere
+        preload: ['en', 'ru'],
+    });
+
+app.use(i18nextMiddleware.handle(i18next));
 
 app.use(express.json());
 app.use(cors());
@@ -12,6 +35,13 @@ app.use(cors());
 recursive(`${__dirname}/routes`).forEach((file) =>
     app.use('/api', require(file))
 );
+
+// test localise example with getting lang parameter from query string
+app.get('/lang', (req, res) => {
+    const response = req.t('greeting');
+    res.status(200);
+    res.send(response);
+});
 
 async function startApp() {
     try {
