@@ -36,13 +36,6 @@ recursive(`${__dirname}/routes`).forEach((file) =>
     app.use('/api', require(file))
 );
 
-// test localise example with getting lang parameter from query string
-app.get('/lang', (req, res) => {
-    const response = req.t('greeting');
-    res.status(200);
-    res.send(response);
-});
-
 async function startApp() {
     try {
         await sequelize.authenticate();
