@@ -1,21 +1,31 @@
-const Router = require('express');
-const { body } = require('express-validator');
-const { todos } = require('../models/index');
-const { handleErrors } = require('../helpers');
+const Router = require("express");
+const { body } = require("express-validator");
+const { todos } = require("../models/index");
+const { handleErrors, verifyToken } = require("../helpers");
 const todoPostRouter = new Router();
-const authMiddleWare = require('../authMiddleWare');
+const authMiddleWare = require("../authMiddleWare");
 
 todoPostRouter.post(
-    '/todo',
-    body('name')
+    "/todo",
+    body("name")
         .isLength({ min: 2 })
-        .withMessage('Task name must be at least 4 chars long'),
-    body('done').exists(),
+        .withMessage("Task name must be at least 4 chars long"),
+    body("done").exists(),
     handleErrors,
     authMiddleWare,
     async (req, res) => {
         const { name, done } = req.body;
-        const user_id = req.user_id;
+        //const user_id =req.user_id;
+
+        // Get 'user id' from request headers
+        const getUserId = (req) => {
+            const headers = req.headers.authorization;
+            const token = headers.split(" ")[1];
+            const { id } = verifyToken(token);
+            return id;
+        };
+
+        const user_id = getUserId(req);
 
         try {
             const nameExisting = await todos.findOne({
