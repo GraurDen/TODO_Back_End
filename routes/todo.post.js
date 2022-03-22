@@ -15,7 +15,6 @@ todoPostRouter.post(
     authMiddleWare,
     async (req, res) => {
         const { name, done } = req.body;
-        //const user_id =req.user_id;
 
         // Get 'user id' from request headers
         const getUserId = (req) => {
