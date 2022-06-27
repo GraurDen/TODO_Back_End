@@ -2,9 +2,9 @@
 const { Model, Sequelize } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class todos extends Model {
-        static associate(models) {}
-    }
+
+    class todos extends Model { static associate(models) {} }
+
     todos.init(
         {
             user_id: DataTypes.UUID,

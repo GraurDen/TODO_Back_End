@@ -54,6 +54,7 @@ todoGetRouter.get(
                 limit: pp,
             });
 
+            console.log("getAll", getAll);
             res.send(getAll);
             //
         } catch (error) {
